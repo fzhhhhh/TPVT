@@ -16,6 +16,9 @@ namespace Domain.Entities
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
         public string Rol { get; set; } = "Usuario";
 
-   
+        //  Eventos creados por este usuario
+        public ICollection<Evento> EventosCreados { get; set; } = new List<Evento>();
+
+
     }
 }

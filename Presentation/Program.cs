@@ -40,14 +40,14 @@ builder.Services.AddDbContext<VirticketDbContext>(options =>
         new MySqlServerVersion(new Version(8, 0, 36)) // ajustá la versión de tu MySQL
     ));
 // ================================
-// ?? Inyección de dependencias
+//  Inyección de dependencias
 // ================================
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IEventoRepository, EventoRepository>();
 builder.Services.AddScoped<IEventoService, EventoService>();
 builder.Services.AddSingleton<AuthService>(new AuthService(key));
-builder.Services.AddHttpClient(); // ?? habilita HttpClientFactory
+builder.Services.AddHttpClient(); // habilita HttpClientFactory
 builder.Services.AddHttpClient<WeatherService>();
 
 // ================================

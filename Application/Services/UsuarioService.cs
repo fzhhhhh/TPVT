@@ -71,14 +71,12 @@ namespace Application.Services
         {
             var usuario = _usuarioRepository.GetByEmail(dto.Email);
 
-            // Verificar si el usuario existe y la contraseña coincide
-            // NOTA: Aquí deberías implementar hash de contraseñas
-            if (usuario != null && usuario.Password == dto.Password)
-
+            // Si no existe o la contraseña no coincide → lanza excepción
+            if (usuario == null || usuario.Password != dto.Password)
                 throw new UsuarioExceptions.CredencialesInvalidasException();
-            {
-                return usuario;
-            }
+
+            // Si pasa la validación → retorna el usuario
+            return usuario;
         }
 
 

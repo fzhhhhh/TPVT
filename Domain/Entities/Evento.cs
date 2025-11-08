@@ -16,5 +16,9 @@ namespace Domain.Entities
         public string Lugar { get; set; } = string.Empty;
         public decimal Precio { get; set; }
         public bool Disponible { get; set; } = true;
+
+        //  Relación con Usuario (Creador)
+        public int UsuarioCreadorId { get; set; }
+        public Usuario UsuarioCreador { get; set; } = null!;
     }
 }

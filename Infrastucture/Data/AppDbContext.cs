@@ -21,6 +21,13 @@ namespace Infrastructure.Data
             modelBuilder.Entity<Usuario>()
                 .Property(u => u.Rol)
                 .HasDefaultValue("User");
+
+            // 🔹 Configurar relación Usuario-Evento
+            modelBuilder.Entity<Evento>()
+                .HasOne(e => e.UsuarioCreador)
+                .WithMany(u => u.EventosCreados)
+                .HasForeignKey(e => e.UsuarioCreadorId)
+                .OnDelete(DeleteBehavior.Restrict); // Evita borrar usuario si tiene eventos
         }
     }
 }

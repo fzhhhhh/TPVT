@@ -16,5 +16,8 @@ namespace Domain.Interfaces
            void Add(Evento evento);
            void Update(Evento evento);
            void Delete(int id);*/
+        Evento GetByIdWithCreator(int id); //  NUEVO MÉTODO
+        List<Evento> GetAllWithCreators(); //  NUEVO MÉTODO
+
     }
 }
