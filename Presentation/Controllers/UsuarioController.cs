@@ -20,6 +20,26 @@ namespace Presentation.Controllers
             _usuarioService = usuarioService;
         }
 
+        [HttpPost("REGISTRO DE USUARIO")]
+        public IActionResult Register([FromBody] RegisterDTO dto)
+        {
+            try
+            {
+                var resultado = _usuarioService.RegistrarUsuario(dto);
+
+                if (resultado == "Usuario registrado con éxito.")
+                {
+                    return Ok(new { mensaje = resultado });
+                }
+
+                return BadRequest(new { error = resultado });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
         //  Obtener todos los usuarios (solo Admin/SuperAdmin)
         [HttpGet("OBTENER TODOS LOS USUARIOS")]
         [Authorize(Roles = "Admin,SuperAdmin")]
@@ -169,9 +189,9 @@ namespace Presentation.Controllers
         }
 
         //  Cambiar rol de usuario (solo SuperAdmin)
-        [HttpPatch("CAMBIAR ROL /{id}")]
+        [HttpPatch("CAMBIAR-ROL/{id}")]
         [Authorize(Roles = "SuperAdmin")]
-        public IActionResult CambiarRol(int id, [FromBody] CambiarRolDTO dto)
+        public IActionResult CambiarRol([FromRoute] int id, [FromBody] CambiarRolDTO dto)
         {
             try
             {
@@ -185,7 +205,7 @@ namespace Presentation.Controllers
         }
 
         //  Eliminar usuario (solo SuperAdmin)
-        [HttpDelete("ELIMINAR USUARIO POR / {id}")]
+        [HttpDelete("eliminar/{id}")]
         [Authorize(Roles = "SuperAdmin")]
         public IActionResult EliminarUsuario(int id)
         {

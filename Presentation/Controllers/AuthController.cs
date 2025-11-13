@@ -20,25 +20,7 @@ namespace Presentation.Controllers
             _authService = authService;
         }
 
-        [HttpPost("REGISTRO DE USUARIO")]
-        public IActionResult Register([FromBody] RegisterDTO dto)
-        {
-            try
-            {
-                var resultado = _usuarioService.RegistrarUsuario(dto);
-
-                if (resultado == "Usuario registrado con éxito.")
-                {
-                    return Ok(new { mensaje = resultado });
-                }
-
-                return BadRequest(new { error = resultado });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-        }
+       
 
         [HttpPost("INICIO DE SESION")]
         public IActionResult Login([FromBody] LoginDTO dto)
