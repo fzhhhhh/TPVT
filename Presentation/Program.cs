@@ -12,20 +12,27 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ================================
-// ?? Configuración de JWT
-// ================================
-var key = builder.Configuration["Jwt:Key"] ?? "clave_super_segura_virticket1234";
+
+// Configuración de JWT
+
+var key = builder.Configuration["Jwt:Key"];
+
+if (string.IsNullOrEmpty(key))
+{
+    throw new Exception("JWT Key no configurada. Debe establecerse en las variables de entorno (Jwt__Key).");
+}
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = false,
-            ValidateAudience = false,
+            ValidateIssuer = true,
+            ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
         };
     });
