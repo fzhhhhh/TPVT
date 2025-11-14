@@ -15,19 +15,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configuración de JWT
 
-var key = builder.Configuration["Jwt:Key"]
-    ?? throw new Exception("No se encontró Jwt:Key en configuracion (appsettings o UserSecrets).");
-
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        var jwtKey = builder.Configuration["Jwt:Key"]
+            ?? throw new Exception("FALTA Jwt:Key en UserSecrets");
+
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = false,
             ValidateAudience = false,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtKey)
+            )
         };
     });
 
@@ -48,7 +50,7 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IEventoRepository, EventoRepository>();
 builder.Services.AddScoped<IEventoService, EventoService>();
-builder.Services.AddScoped<IAuthService>(sp => new AuthService(key));// si es como los otros, no permite el valor de key
+builder.Services.AddScoped<IAuthService, AuthService>(); // inyección de AuthService con configuración auto
 //builder.Services.AddSingleton<IAuthService>(new AuthService(key));
 builder.Services.AddHttpClient(); // habilita HttpClientFactory
 builder.Services.AddHttpClient<WeatherService>();

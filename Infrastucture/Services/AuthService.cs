@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Domain.Entities;
 using Application.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Services
 {
@@ -11,14 +12,15 @@ namespace Infrastructure.Services
     {
         private readonly string _key;
 
-        public AuthService(string key)
+        public AuthService(IConfiguration configuration)
         {
-            _key = key;
+            _key = configuration["Jwt:Key"]
+                ?? throw new Exception("FALTA Jwt:Key en configuracion (UserSecrets).");
         }
 
         public string GenerarToken(Usuario usuario)
         {
-            var claims = new[] //datos que va a contener el token
+            var claims = new[]
             {
                 new Claim(ClaimTypes.Name, usuario.Email),
                 new Claim(ClaimTypes.Role, usuario.Rol)
@@ -30,7 +32,8 @@ namespace Infrastructure.Services
             var token = new JwtSecurityToken(
                 claims: claims,
                 expires: DateTime.Now.AddHours(3),
-                signingCredentials: creds);
+                signingCredentials: creds
+            );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
