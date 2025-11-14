@@ -12,10 +12,10 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ================================
-// ?? Configuración de JWT
-// ================================
-var key = builder.Configuration["Jwt:Key"] ?? "clave_super_segura_virticket1234";
+
+// Configuración de JWT
+
+var key = builder.Configuration["Jwt:Key"];
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -39,24 +39,27 @@ builder.Services.AddDbContext<VirticketDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(8, 0, 36)) // ajustá la versión de tu MySQL
     ));
-// ================================
+
 //  Inyección de dependencias
-// ================================
+
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IEventoRepository, EventoRepository>();
 builder.Services.AddScoped<IEventoService, EventoService>();
-builder.Services.AddSingleton<AuthService>(new AuthService(key));
+builder.Services.AddScoped<IAuthService>(sp => new AuthService(key));// si es como los otros, no permite el valor de key
+//builder.Services.AddSingleton<IAuthService>(new AuthService(key));
+builder.Services.AddHttpClient(); // habilita HttpClientFactory
+builder.Services.AddHttpClient<WeatherService>();
 builder.Services.AddHttpClient(); // habilita HttpClientFactory
 builder.Services.AddHttpClient<WeatherService>();
 
-// ================================
-// ?? Configuración general del API
-// ================================
+
+//  Configuración general del API
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// ?? Configuración de Swagger para JWT
+//  Configuración de Swagger para JWT
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Virticket API", Version = "v1" });
@@ -86,30 +89,30 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// ================================
-// ?? Construcción de la app
-// ================================
+
+//  Construcción de la app
+
 var app = builder.Build();
 
-// ================================
-// ?? Configuración de Swagger
-// ================================
+
+//  Configuración de Swagger
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// ================================
-// ?? Middleware de seguridad
-// ================================
+
+//  Middleware de seguridad
+
 app.UseHttpsRedirection();
 app.UseAuthentication(); // obligatorio antes de Authorization
 app.UseAuthorization();
 
-// ================================
-// ?? Endpoints
-// ================================
+
+//  Endpoints
+
 app.MapControllers();
 
 app.Run();

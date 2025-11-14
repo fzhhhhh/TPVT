@@ -12,15 +12,14 @@ namespace Presentation.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUsuarioService _usuarioService;
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
 
-        public AuthController(IUsuarioService usuarioService, AuthService authService)
+        public AuthController(IUsuarioService usuarioService, IAuthService authService)
         {
             _usuarioService = usuarioService;
             _authService = authService;
         }
 
-       
 
         [HttpPost("INICIO DE SESION")]
         public IActionResult Login([FromBody] LoginDTO dto)

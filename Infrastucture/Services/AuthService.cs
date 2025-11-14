@@ -3,10 +3,11 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Domain.Entities;
+using Application.Interfaces;
 
 namespace Infrastructure.Services
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private readonly string _key;
 
@@ -17,10 +18,10 @@ namespace Infrastructure.Services
 
         public string GenerarToken(Usuario usuario)
         {
-            var claims = new[]
+            var claims = new[] //datos que va a contener el token
             {
                 new Claim(ClaimTypes.Name, usuario.Email),
-                new Claim(ClaimTypes.Role, usuario.Rol) 
+                new Claim(ClaimTypes.Role, usuario.Rol)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
