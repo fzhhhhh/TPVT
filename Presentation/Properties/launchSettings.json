@@ -16,10 +16,7 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "Jwt__Key": "clave_super_segura_virticket1234",
-        "Jwt__Issuer": "VirticketAPI",
-        "Jwt__Audience": "VirticketUsers",
-        "ConnectionStrings__DefaultConnection": "Server=localhost;Database=virticket_db;User=root;Password=root;"
+        
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7238;http://localhost:5069"

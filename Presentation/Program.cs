@@ -15,7 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configuración de JWT
 
-var key = builder.Configuration["Jwt:Key"];
+var key = builder.Configuration["Jwt:Key"]
+    ?? throw new Exception("No se encontró Jwt:Key en configuracion (appsettings o UserSecrets).");
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -33,6 +34,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 //config BDO//
+var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<VirticketDbContext>(options =>
     options.UseMySql(
